@@ -1,3 +1,14 @@
+// Ocultamos el preloader con un tiempo minimo de visualizacion
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        setTimeout(() => {
+            preloader.classList.add('hidden');
+            setTimeout(() => preloader.remove(), 700);
+        }, 2000);
+    }
+});
+
 // Esperamos a que el DOM esté completamente cargado antes de ejecutar scripts
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -39,127 +50,111 @@ document.addEventListener('DOMContentLoaded', () => {
     // LÓGICA DEL CARRUSEL DE TESTIMONIOS
     // ==========================================
     const track = document.querySelector('.carousel-track');
-    
-    if(track) {
-        const slides = Array.from(track.children);
-        const nextButton = document.querySelector('.carousel-button--right');
-        const prevButton = document.querySelector('.carousel-button--left');
+
+    if (track) {
+        const slides  = Array.from(track.children);
+        const nextBtn = document.querySelector('.carousel-button--right');
+        const prevBtn = document.querySelector('.carousel-button--left');
         const dotsNav = document.querySelector('.carousel-nav');
-        const dots = Array.from(dotsNav.children);
+        const dots    = Array.from(dotsNav.children);
 
-        // Obtiene el ancho dinámico del primer slide
-        const slideWidth = slides[0].getBoundingClientRect().width;
+        // Calcula el ancho del contenedor en el momento de navegar (responsive)
+        const getSlideWidth = () => track.parentElement.getBoundingClientRect().width;
 
-        // Organiza los slides uno al lado del otro
-        const setSlidePosition = (slide, index) => {
-            slide.style.left = slideWidth * index + 'px';
-        };
-        slides.forEach(setSlidePosition);
-
-        // Función principal para mover el carrusel
-        const moveToSlide = (track, currentSlide, targetSlide) => {
-            track.style.transform = 'translateX(-' + targetSlide.style.left + ')';
+        const moveToSlide = (currentSlide, targetSlide) => {
+            const targetIndex = slides.indexOf(targetSlide);
+            track.style.transform = `translateX(-${targetIndex * getSlideWidth()}px)`;
             currentSlide.classList.remove('current-slide');
             targetSlide.classList.add('current-slide');
-        }
+        };
 
-        // Actualiza los dots visuales
         const updateDots = (currentDot, targetDot) => {
             currentDot.classList.remove('current-indicator');
             targetDot.classList.add('current-indicator');
-        }
+        };
 
-        // Oculta/Muestra flechas si es el inicio o final
-        const hideShowArrows = (slides, prevButton, nextButton, targetIndex) => {
-            if (targetIndex === 0) {
-                prevButton.classList.add('is-hidden');
-                nextButton.classList.remove('is-hidden');
-            } else if (targetIndex === slides.length - 1) {
-                prevButton.classList.remove('is-hidden');
-                nextButton.classList.add('is-hidden');
-            } else {
-                prevButton.classList.remove('is-hidden');
-                nextButton.classList.remove('is-hidden');
-            }
-        }
+        const hideShowArrows = (targetIndex) => {
+            prevBtn.classList.toggle('is-hidden', targetIndex === 0);
+            nextBtn.classList.toggle('is-hidden', targetIndex === slides.length - 1);
+        };
 
-        // Click Flecha Derecha
-        nextButton.addEventListener('click', e => {
+        nextBtn.addEventListener('click', () => {
             const currentSlide = track.querySelector('.current-slide');
-            const nextSlide = currentSlide.nextElementSibling;
-            const currentDot = dotsNav.querySelector('.current-indicator');
-            const nextDot = currentDot.nextElementSibling;
-            const nextIndex = slides.findIndex(slide => slide === nextSlide);
-
-            moveToSlide(track, currentSlide, nextSlide);
-            updateDots(currentDot, nextDot);
-            hideShowArrows(slides, prevButton, nextButton, nextIndex);
+            const nextSlide    = currentSlide.nextElementSibling;
+            const currentDot   = dotsNav.querySelector('.current-indicator');
+            moveToSlide(currentSlide, nextSlide);
+            updateDots(currentDot, currentDot.nextElementSibling);
+            hideShowArrows(slides.indexOf(nextSlide));
         });
 
-        // Click Flecha Izquierda
-        prevButton.addEventListener('click', e => {
+        prevBtn.addEventListener('click', () => {
             const currentSlide = track.querySelector('.current-slide');
-            const prevSlide = currentSlide.previousElementSibling;
-            const currentDot = dotsNav.querySelector('.current-indicator');
-            const prevDot = currentDot.previousElementSibling;
-            const prevIndex = slides.findIndex(slide => slide === prevSlide);
-
-            moveToSlide(track, currentSlide, prevSlide);
-            updateDots(currentDot, prevDot);
-            hideShowArrows(slides, prevButton, nextButton, prevIndex);
+            const prevSlide    = currentSlide.previousElementSibling;
+            const currentDot   = dotsNav.querySelector('.current-indicator');
+            moveToSlide(currentSlide, prevSlide);
+            updateDots(currentDot, currentDot.previousElementSibling);
+            hideShowArrows(slides.indexOf(prevSlide));
         });
 
-        // Click en los Dots
         dotsNav.addEventListener('click', e => {
-            // Ignorar clics que no sean en un botón
             const targetDot = e.target.closest('button');
             if (!targetDot) return;
-
             const currentSlide = track.querySelector('.current-slide');
-            const currentDot = dotsNav.querySelector('.current-indicator');
-            const targetIndex = dots.findIndex(dot => dot === targetDot);
-            const targetSlide = slides[targetIndex];
-
-            moveToSlide(track, currentSlide, targetSlide);
+            const currentDot   = dotsNav.querySelector('.current-indicator');
+            const targetIndex  = dots.indexOf(targetDot);
+            moveToSlide(currentSlide, slides[targetIndex]);
             updateDots(currentDot, targetDot);
-            hideShowArrows(slides, prevButton, nextButton, targetIndex);
+            hideShowArrows(targetIndex);
+        });
+
+        // Recalcula la posición al cambiar el tamaño de pantalla
+        window.addEventListener('resize', () => {
+            const currentIndex = slides.indexOf(track.querySelector('.current-slide'));
+            track.style.transform = `translateX(-${currentIndex * getSlideWidth()}px)`;
         });
     }
 
     // ==========================================
-    // LÓGICA DEL FORMULARIO DE CONTACTO
+    // LÓGICA DEL CARRUSEL DE PASOS
     // ==========================================
-    const contactForm = document.getElementById('b2b-form');
-    
-    if(contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // Evita que la página se recargue
-            
-            const btnSubmit = contactForm.querySelector('.form-submit');
-            const originalText = btnSubmit.textContent;
-            
-            // Efecto visual de "Enviando"
-            btnSubmit.textContent = 'Enviando...';
-            btnSubmit.style.opacity = '0.7';
-            btnSubmit.disabled = true;
+    const stepsCarousel = document.querySelector('.steps-carousel');
 
-            // Simulamos el envío a un servidor (Aquí luego conectarías Fetch a un Back-end)
-            setTimeout(() => {
-                // Mensaje de éxito
-                btnSubmit.textContent = '¡Solicitud Enviada!';
-                btnSubmit.style.backgroundColor = 'var(--color-verde)';
-                btnSubmit.style.opacity = '1';
-                
-                // Limpiamos el formulario
-                contactForm.reset();
+    if (stepsCarousel) {
+        const slides      = Array.from(stepsCarousel.querySelectorAll('.steps-slide'));
+        const indicators  = Array.from(stepsCarousel.querySelectorAll('.steps-indicator'));
+        const prevBtn     = stepsCarousel.querySelector('#stepsPrev');
+        const nextBtn     = stepsCarousel.querySelector('#stepsNext');
+        const progressBar = stepsCarousel.querySelector('#stepsProgressBar');
+        const total       = slides.length;
+        let current       = 0;
 
-                // Restauramos el botón después de 3 segundos
-                setTimeout(() => {
-                    btnSubmit.textContent = originalText;
-                    btnSubmit.style.backgroundColor = '';
-                    btnSubmit.disabled = false;
-                }, 3000);
-            }, 1500);
+        const goTo = (index) => {
+            // Quita activo del slide y dot anterior
+            slides[current].classList.remove('steps-slide--active');
+            indicators[current].classList.remove('steps-indicator--active');
+
+            current = index;
+
+            // Activa el nuevo
+            slides[current].classList.add('steps-slide--active');
+            indicators[current].classList.add('steps-indicator--active');
+
+            // Actualiza la barra de progreso
+            progressBar.style.width = ((current + 1) / total * 100) + '%';
+
+            // Habilita / deshabilita los botones en los extremos
+            prevBtn.disabled = current === 0;
+            nextBtn.disabled = current === total - 1;
+        };
+
+        // Inicializa la barra al cargar
+        progressBar.style.width = ((1 / total) * 100) + '%';
+
+        prevBtn.addEventListener('click', () => { if (current > 0) goTo(current - 1); });
+        nextBtn.addEventListener('click', () => { if (current < total - 1) goTo(current + 1); });
+
+        indicators.forEach((dot, i) => {
+            dot.addEventListener('click', () => goTo(i));
         });
     }
 });
