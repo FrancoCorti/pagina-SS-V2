@@ -4,8 +4,13 @@ window.addEventListener('load', () => {
     if (preloader) {
         setTimeout(() => {
             preloader.classList.add('hidden');
-            setTimeout(() => preloader.remove(), 700);
+            setTimeout(() => {
+                preloader.remove();
+                AOS.init({ duration: 800, once: true, offset: 100 });
+            }, 700);
         }, 2000);
+    } else {
+        AOS.init({ duration: 800, once: true, offset: 100 });
     }
 });
 
