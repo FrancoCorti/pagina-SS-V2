@@ -11,9 +11,39 @@
     --color-fondo: #F7F5EE;
     --color-blanco: #FFFFFF;
 
-    /* Tipografía - Manual de Identidad SS */
-    --font-titulos: 'Anton', sans-serif;
-    --font-cuerpo: 'Bree Serif', serif;
+    /* Tipografía - Familias */
+    --font-titulos: 'Playfair Display', 'Georgia', serif;
+    --font-cuerpo: 'Inter', 'Helvetica Neue', sans-serif;
+    --font-logo: 'Montserrat', 'Arial', sans-serif;
+
+    /* Tipografía - Escala de tamaños (Major Third 1.25) */
+    --fs-xs: 0.75rem;
+    --fs-sm: 0.875rem;
+    --fs-base: 1rem;
+    --fs-md: 1.125rem;
+    --fs-lg: 1.25rem;
+    --fs-xl: 1.5rem;
+    --fs-2xl: 2rem;
+    --fs-3xl: 2.5rem;
+    --fs-4xl: 3.5rem;
+
+    /* Tipografía - Line Heights */
+    --lh-tight: 1.15;
+    --lh-snug: 1.35;
+    --lh-normal: 1.6;
+    --lh-relaxed: 1.75;
+
+    /* Tipografía - Letter Spacing */
+    --ls-tight: -0.01em;
+    --ls-normal: 0;
+    --ls-wide: 0.05em;
+    --ls-wider: 0.1em;
+
+    /* Tipografía - Font Weights */
+    --fw-regular: 400;
+    --fw-medium: 500;
+    --fw-semibold: 600;
+    --fw-bold: 700;
 
     /* Espaciados y Layout */
     --container-width: 1200px;
@@ -61,10 +91,10 @@
 }
 
 .preloader-text {
-    font-family: 'Bree Serif', serif;
+    font-family: var(--font-titulos);
     color: #5E8D71;
-    font-size: 1.2rem;
-    letter-spacing: 0.05em;
+    font-size: var(--fs-md);
+    letter-spacing: var(--ls-wide);
     opacity: 0;
     animation: fadeInUp 0.8s ease 0.5s forwards;
 }
@@ -80,18 +110,21 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden; /* Evita scroll horizontal causado por animaciones AOS (fade-left/right) */
 }
 
 body {
     font-family: var(--font-cuerpo);
     background-color: var(--color-fondo);
     color: var(--color-gris-texto);
-    line-height: 1.6;
+    line-height: var(--lh-normal);
+    overflow-x: hidden;
+    padding-top: 100px; /* Compensa la altura del navbar fixed */
 }
 
 h1, h2, h3 {
     font-family: var(--font-titulos);
-    font-weight: 400;
+    font-weight: var(--fw-bold);
     color: var(--color-violeta);
 }
 
@@ -113,6 +146,12 @@ section {
     padding: 80px 0; /* Espaciado generoso para respirar (White space) */
 }
 
+@media (max-width: 576px) {
+    section {
+        padding: 48px 0;
+    }
+}
+
 /* (Aquí iremos agregando los estilos específicos de cada sección) */
 
 /* =========================================
@@ -121,16 +160,20 @@ section {
 .navbar {
     background-color: var(--color-fondo);
     box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Sombra sutil para despegar el menú del fondo */
-    position: sticky; /* Se queda fijo arriba al hacer scroll */
+    position: fixed; /* Se queda fijo arriba al hacer scroll */
     top: 0;
+    left: 0;
+    width: 100%;
     z-index: 1000;
 }
 
 .nav-content {
     display: flex;
-    justify-content: space-between; /* Logo a la izq, links a la der */
+    justify-content: space-between;
     align-items: center;
     height: 100px;
+    max-width: 1600px;
+    padding: 0 40px;
 }
 
 .logo {
@@ -138,6 +181,7 @@ section {
     align-items: center;
     gap: 0.75rem;
     transition: transform 0.3s ease, opacity 0.3s ease;
+    margin-right: auto;
 }
 
 .logo:hover {
@@ -153,23 +197,23 @@ section {
 .logo-text {
     display: flex;
     flex-direction: column;
-    line-height: 1.15;
+    line-height: var(--lh-tight);
 }
 
 .logo-text-top {
-    font-family: 'Montserrat', 'Arial', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 5px;
+    font-family: var(--font-logo);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-wider);
     color: var(--color-verde);
     text-transform: uppercase;
 }
 
 .logo-text-bottom {
-    font-family: 'Montserrat', 'Arial', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 3px;
+    font-family: var(--font-logo);
+    font-size: var(--fs-base);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-wider);
     color: var(--color-verde);
     text-transform: uppercase;
 }
@@ -182,7 +226,7 @@ section {
 
 .nav-link {
     color: var(--color-gris-texto);
-    font-weight: 500;
+    font-weight: var(--fw-medium);
     position: relative; /* Necesario para la animación del hover */
 }
 
@@ -212,7 +256,7 @@ section {
     color: var(--color-blanco);
     padding: 10px 24px;
     border-radius: 6px;
-    font-weight: 500;
+    font-weight: var(--fw-semibold);
     transition: background-color var(--transition-speed) ease;
 }
 
@@ -277,6 +321,23 @@ section {
     .hamburger.active .bar:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
     }
+
+    .nav-content {
+        padding: 0 16px;
+        height: 70px;
+    }
+
+    .nav-links {
+        top: 70px;
+    }
+
+    .logo img {
+        max-height: 60px;
+    }
+
+    body {
+        padding-top: 70px; /* Compensa la altura reducida del navbar en móvil */
+    }
 }
 
 /* =========================================
@@ -306,16 +367,17 @@ section {
 .hero-badge {
     display: inline-block;
     color: var(--color-verde);
-    font-size: 0.875rem;
-    font-weight: 700;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: var(--ls-wide);
     margin-bottom: 1rem;
 }
 
 .hero-title {
-    font-size: 3.5rem; /* Tamaño imponente */
-    line-height: 1.1;
+    font-size: var(--fs-4xl);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-tight);
     color: var(--color-gris-texto);
     margin-bottom: 1.5rem;
 }
@@ -326,10 +388,12 @@ section {
 }
 
 .hero-description {
-    font-size: 1.125rem;
+    font-size: var(--fs-md);
+    font-weight: var(--fw-medium);
     color: var(--color-gris-texto);
     margin-bottom: 2.5rem;
     max-width: 90%;
+    text-align: justify;
 }
 
 /* --- Botones --- */
@@ -346,7 +410,7 @@ section {
     padding: 10px 24px;
     border: 2px solid var(--color-violeta);
     border-radius: 6px;
-    font-weight: 600;
+    font-weight: var(--fw-semibold);
     transition: all var(--transition-speed) ease;
 }
 
@@ -393,25 +457,53 @@ section {
    ========================================= */
 @media (max-width: 992px) {
     .hero-container {
-        grid-template-columns: 1fr; /* Pasa a 1 sola columna */
-        text-align: center; /* Centramos todo */
-        gap: 3rem;
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
     }
 
     .hero-title {
-        font-size: 2.5rem; /* Achicamos el título para que no rompa la pantalla */
+        font-size: var(--fs-3xl);
     }
 
     .hero-description {
-        margin: 0 auto 2rem auto; /* Centramos el párrafo */
-    }
-
-    .hero-buttons {
-        justify-content: center; /* Centramos los botones */
+        max-width: 100%;
+        text-align: left;
     }
     
     .hero-decoration {
-        display: none; /* Ocultamos la decoración en móvil para no causar overflow */
+        display: none;
+    }
+
+    .hero-image-wrapper {
+        max-width: 480px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section {
+        min-height: auto;
+        padding: 24px 0;
+    }
+
+    .hero-title {
+        font-size: var(--fs-2xl);
+    }
+
+    .hero-description {
+        font-size: var(--fs-base);
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+    }
+
+    .hero-buttons .btn-primary,
+    .hero-buttons .btn-outline {
+        display: block;
+        width: 100%;
+        text-align: center;
     }
 }
 
@@ -460,25 +552,31 @@ section {
     margin-bottom: 4rem;
 }
 
+@media (max-width: 576px) {
+    .section-header {
+        margin-bottom: 2.5rem;
+    }
+}
+
 .badge {
     color: var(--color-verde);
-    font-weight: 700;
+    font-weight: var(--fw-bold);
     text-transform: uppercase;
-    letter-spacing: 2px;
-    font-size: 0.875rem;
+    letter-spacing: var(--ls-wide);
+    font-size: var(--fs-sm);
     display: block;
     margin-bottom: 1rem;
 }
 
 .section-header h2 {
-    font-size: 2.5rem;
+    font-size: var(--fs-3xl);
     margin-bottom: 1rem;
 }
 
 .section-header p {
     max-width: 600px;
     margin: 0 auto;
-    font-size: 1.125rem;
+    font-size: var(--fs-md);
 }
 
 /* Grilla principal */
@@ -551,13 +649,13 @@ section {
 }
 
 .service-card h3 {
-    font-size: 1.25rem;
+    font-size: var(--fs-lg);
     margin-bottom: 1rem;
     color: var(--color-gris-texto);
 }
 
 .service-card p {
-    font-size: 0.95rem;
+    font-size: var(--fs-base);
     color: var(--color-gris-texto);
 }
 
@@ -575,7 +673,7 @@ section {
         grid-template-columns: 1fr; /* 1 columna en teléfonos */
     }
     .section-header h2 {
-        font-size: 2rem;
+        font-size: var(--fs-2xl);
     }
 }
 
@@ -639,15 +737,15 @@ section {
 
 /* Texto del beneficio */
 .benefit-content h3 {
-    font-size: 1.25rem;
+    font-size: var(--fs-lg);
     margin-bottom: 0.5rem;
     color: var(--color-violeta); /* Títulos en violeta para conectar con la marca */
 }
 
 .benefit-content p {
-    font-size: 1rem;
+    font-size: var(--fs-base);
     color: var(--color-gris-texto);
-    line-height: 1.6;
+    line-height: var(--lh-normal);
 }
 
 /* =========================================
@@ -717,15 +815,15 @@ section {
 }
 
 .about-content p {
-    font-size: 1.05rem;
-    line-height: 1.8;
+    font-size: var(--fs-base);
+    line-height: var(--lh-relaxed);
     margin-bottom: 1.25rem;
     color: var(--color-gris-texto);
 }
 
 .about-tagline {
     font-family: var(--font-titulos);
-    font-size: 1.5rem;
+    font-size: var(--fs-xl);
     color: var(--color-violeta);
     text-align: center;
     margin-top: 2rem;
@@ -754,7 +852,7 @@ section {
 
 .section-tagline p {
     font-family: var(--font-titulos);
-    font-size: 1.4rem;
+    font-size: var(--fs-xl);
     color: var(--color-verde);
 }
 
@@ -831,8 +929,8 @@ section {
 }
 
 .step-number {
-    font-family: var(--font-titulos);
-    font-size: 1.1rem;
+    font-family: var(--font-logo);
+    font-size: var(--fs-base);
     color: var(--color-blanco);
     position: absolute;
     top: 16px;
@@ -863,17 +961,17 @@ section {
 }
 
 .step-card-solo h3 {
-    font-size: 1.5rem;
+    font-size: var(--fs-xl);
     color: var(--color-violeta);
     margin-bottom: 1rem;
 }
 
 .step-card-solo p {
-    font-size: 1.05rem;
+    font-size: var(--fs-base);
     color: var(--color-gris-texto);
     max-width: 440px;
     margin: 0 auto;
-    line-height: 1.7;
+    line-height: var(--lh-relaxed);
 }
 
 /* Controles del carrusel */
@@ -930,10 +1028,10 @@ section {
     border: 2px solid #dcdcdc;
     background: transparent;
     cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
     color: #bbb;
-    font-family: var(--font-titulos);
+    font-family: var(--font-logo);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -957,12 +1055,12 @@ section {
         padding: 2.5rem 1.75rem;
     }
     .step-number {
-        font-size: 1rem;
+        font-size: var(--fs-sm);
     }
     .steps-indicator {
         width: 34px;
         height: 34px;
-        font-size: 0.65rem;
+        font-size: var(--fs-xs);
     }
 }
 
@@ -981,11 +1079,11 @@ section {
    ========================================= */
 
 .service-subtitle {
-    font-size: 0.85rem;
+    font-size: var(--fs-sm);
     color: var(--color-verde);
-    font-weight: 600;
+    font-weight: var(--fw-semibold);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: var(--ls-wide);
     margin-bottom: 1rem;
 }
 
@@ -998,53 +1096,98 @@ section {
     border-top: 1px solid #eaeaea;
 }
 
-.extra-services-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-}
-
-.extra-service-item {
+/* --- Lista de servicios alternada --- */
+.extra-services-list {
     display: flex;
-    align-items: flex-start;
-    gap: 1.25rem;
-    padding: 1.5rem;
-    background-color: var(--color-blanco);
-    border-radius: 12px;
-    border: 1px solid #f0f0f0;
-    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    flex-direction: column;
+    max-width: 860px;
+    margin: 0 auto;
 }
 
-.extra-service-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+/* --- Filas individuales --- */
+.extra-service-row {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    padding: 2.75rem 0;
 }
 
-.extra-service-item svg {
-    width: 32px;
-    height: 32px;
+.extra-service-row--right {
+    flex-direction: row-reverse;
+}
+
+.extra-service-row--right .extra-service-content {
+    text-align: right;
+}
+
+/* --- Ícono --- */
+.extra-service-icon {
     flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.extra-service-icon svg {
+    width: 52px;
+    height: 52px;
     color: var(--color-violeta);
-    margin-top: 4px;
 }
 
-.extra-service-item h3 {
-    font-family: var(--font-cuerpo);
-    font-size: 1.05rem;
-    font-weight: 700;
+/* SVG stroke draw: el trazo empieza invisible */
+.extra-service-icon path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+}
+
+/* Al entrar en viewport (AOS añade .aos-animate) se dibuja el trazo */
+.extra-service-row.aos-animate .extra-service-icon path {
+    animation: svgStrokeDraw 1.2s ease forwards;
+    animation-delay: 0.35s;
+}
+
+@keyframes svgStrokeDraw {
+    to { stroke-dashoffset: 0; }
+}
+
+/* --- Contenido de texto --- */
+.extra-service-content h3 {
+    font-family: var(--font-titulos);
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-semibold);
     color: var(--color-gris-texto);
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
 }
 
-.extra-service-item p {
-    font-size: 0.9rem;
+.extra-service-content p {
+    font-size: var(--fs-base);
     color: var(--color-gris-texto);
-    opacity: 0.85;
+    opacity: 0.8;
+    line-height: var(--lh-relaxed);
 }
 
+/* --- Separadores animados --- */
+.extra-service-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--color-violeta) 20%, var(--color-violeta) 80%, transparent);
+}
+
+/* =========================================
+   RESPONSIVE — + Servicios
+   ========================================= */
 @media (max-width: 768px) {
-    .extra-services-grid {
-        grid-template-columns: 1fr;
+    .extra-service-row,
+    .extra-service-row--right {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+        padding: 2rem 0;
+    }
+
+    .extra-service-row--right .extra-service-content {
+        text-align: left;
     }
 }
 
@@ -1101,7 +1244,7 @@ section {
 }
 
 .program-card h3 {
-    font-size: 1.25rem;
+    font-size: var(--fs-lg);
     margin-bottom: 0.5rem;
     color: var(--color-violeta);
 }
@@ -1109,12 +1252,12 @@ section {
 .program-tagline {
     font-style: italic;
     color: var(--color-verde);
-    font-size: 0.95rem;
+    font-size: var(--fs-sm);
     margin-bottom: 1rem;
 }
 
 .program-card p:last-child {
-    font-size: 0.95rem;
+    font-size: var(--fs-base);
     color: var(--color-gris-texto);
 }
 
@@ -1190,12 +1333,12 @@ section {
     position: absolute;
     top: 10px;
     left: 20px;
-    font-family: serif;
+    font-family: var(--font-titulos);
 }
 
 .testimonial-text {
-    font-size: 1.05rem;
-    line-height: 1.5;
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
     font-style: italic;
     color: var(--color-gris-texto);
     margin-bottom: 1.5rem;
@@ -1205,15 +1348,15 @@ section {
 
 .author-info h4 {
     color: var(--color-violeta);
-    font-size: 1.125rem;
+    font-size: var(--fs-md);
     margin-bottom: 0.25rem;
 }
 
 .author-info span {
     color: #a0a0a0;
-    font-size: 0.875rem;
+    font-size: var(--fs-sm);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: var(--ls-wide);
 }
 
 /* Controles del Carrusel (Flechas) */
@@ -1282,10 +1425,12 @@ section {
 @media (max-width: 768px) {
     .testimonial-card {
         padding: 1.2rem 1.2rem;
+        height: auto;
+        min-height: 280px;
     }
     .testimonial-text {
-        font-size: 0.82rem;
-        line-height: 1.45;
+        font-size: var(--fs-sm);
+        line-height: var(--lh-snug);
         margin-bottom: 0.75rem;
         padding-top: 2.2rem;
     }
@@ -1295,14 +1440,16 @@ section {
         left: 12px;
     }
     .author-info h4 {
-        font-size: 0.95rem;
+        font-size: var(--fs-sm);
     }
     .author-info span {
-        font-size: 0.75rem;
+        font-size: var(--fs-xs);
     }
-    /* Ocultamos las flechas en móvil para ahorrar espacio; se usarán los dots */
     .carousel-button {
         display: none; 
+    }
+    .testimonials-section {
+        padding: 48px 0;
     }
 }
 
@@ -1313,7 +1460,7 @@ section {
 .contact-section {
     background-color: #5E8D71;
     background-image: linear-gradient(135deg, #4a7459 0%, #5E8D71 50%, #6fa082 100%);
-    padding: 110px 0;
+    padding: 80px 0;
     position: relative;
     overflow: hidden;
 }
@@ -1355,7 +1502,7 @@ section {
     background-color: rgba(255, 255, 255, 0.12);
     border-radius: 20px;
     padding: 4px 14px;
-    letter-spacing: 2.5px;
+    letter-spacing: var(--ls-wide);
 }
 
 .contact-cards {
@@ -1407,18 +1554,18 @@ section {
 
 .contact-card h3 {
     font-family: var(--font-cuerpo);
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
     text-transform: uppercase;
-    letter-spacing: 2.5px;
+    letter-spacing: var(--ls-wide);
     color: #5E8D71;
     margin-bottom: 0.75rem;
 }
 
 .contact-card a {
     color: var(--color-texto);
-    font-size: 1rem;
-    font-weight: 500;
+    font-size: var(--fs-base);
+    font-weight: var(--fw-medium);
     word-break: break-word;
     transition: color var(--transition-speed) ease;
 }
@@ -1440,18 +1587,18 @@ section {
 }
 
 .contact-cta p {
-    font-size: 1.125rem;
+    font-size: var(--fs-md);
     color: rgba(255, 255, 255, 0.88);
 }
 
 .contact-cta .btn-primary {
-    font-size: 1.0625rem;
+    font-size: var(--fs-base);
     padding: 14px 40px;
     background-color: #ffffff;
     color: #5E8D71;
     border-radius: 8px;
-    font-weight: 700;
-    letter-spacing: 0.3px;
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--ls-normal);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
 }
@@ -1484,7 +1631,7 @@ section {
     margin-top: 0.5rem;
     color: rgba(255, 255, 255, 0.8);
     max-width: 300px;
-    font-size: 0.9rem;
+    font-size: var(--fs-sm);
 }
 
 .footer-logo {
@@ -1498,8 +1645,8 @@ section {
 
 .footer-links h4 {
     color: var(--color-blanco);
-    font-size: 1rem;
-    font-weight: 500;
+    font-size: var(--fs-base);
+    font-weight: var(--fw-medium);
     margin-bottom: 0.875rem;
 }
 
@@ -1513,8 +1660,8 @@ section {
 
 .footer-links a {
     color: rgba(255, 255, 255, 0.8);
-    font-weight: 400;
-    font-size: 0.9rem;
+    font-weight: var(--fw-regular);
+    font-size: var(--fs-sm);
 }
 
 .footer-links a:hover {
@@ -1526,7 +1673,7 @@ section {
     background-color: #3d3d3d;
     text-align: center;
     padding: 12px 0;
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
     color: rgba(255, 255, 255, 0.7);
 }
 
@@ -1543,8 +1690,14 @@ section {
 }
 
 @media (max-width: 576px) {
+    .contact-section {
+        padding: 48px 0;
+    }
     .contact-cards {
         grid-template-columns: 1fr;
+    }
+    .contact-card {
+        padding: 2rem 1.5rem;
     }
     .footer-container {
         grid-template-columns: 1fr;
@@ -1553,6 +1706,9 @@ section {
     }
     .footer-brand p {
         margin: 1rem auto;
+    }
+    .footer-links {
+        text-align: center;
     }
     .social-links {
         justify-content: center;

@@ -6,7 +6,13 @@ window.addEventListener('load', () => {
             preloader.classList.add('hidden');
             setTimeout(() => {
                 preloader.remove();
-                AOS.init({ duration: 800, once: true, offset: 100 });
+                // Esperamos a que el navegador repinte tras eliminar el preloader
+                // antes de inicializar AOS, para que calcule posiciones correctamente en móvil
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        AOS.init({ duration: 800, once: true, offset: 50 });
+                    });
+                });
             }, 700);
         }, 2000);
     } else {
@@ -58,12 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (track) {
         const slides  = Array.from(track.children);
-        const nextBtn = document.querySelector('.carousel-button--right');
-        const prevBtn = document.querySelector('.carousel-button--left');
         const dotsNav = document.querySelector('.carousel-nav');
         const dots    = Array.from(dotsNav.children);
 
-        // Calcula el ancho del contenedor en el momento de navegar (responsive)
         const getSlideWidth = () => track.parentElement.getBoundingClientRect().width;
 
         const moveToSlide = (currentSlide, targetSlide) => {
@@ -78,29 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
             targetDot.classList.add('current-indicator');
         };
 
-        const hideShowArrows = (targetIndex) => {
-            prevBtn.classList.toggle('is-hidden', targetIndex === 0);
-            nextBtn.classList.toggle('is-hidden', targetIndex === slides.length - 1);
-        };
-
-        nextBtn.addEventListener('click', () => {
-            const currentSlide = track.querySelector('.current-slide');
-            const nextSlide    = currentSlide.nextElementSibling;
-            const currentDot   = dotsNav.querySelector('.current-indicator');
-            moveToSlide(currentSlide, nextSlide);
-            updateDots(currentDot, currentDot.nextElementSibling);
-            hideShowArrows(slides.indexOf(nextSlide));
-        });
-
-        prevBtn.addEventListener('click', () => {
-            const currentSlide = track.querySelector('.current-slide');
-            const prevSlide    = currentSlide.previousElementSibling;
-            const currentDot   = dotsNav.querySelector('.current-indicator');
-            moveToSlide(currentSlide, prevSlide);
-            updateDots(currentDot, currentDot.previousElementSibling);
-            hideShowArrows(slides.indexOf(prevSlide));
-        });
-
         dotsNav.addEventListener('click', e => {
             const targetDot = e.target.closest('button');
             if (!targetDot) return;
@@ -109,13 +89,29 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetIndex  = dots.indexOf(targetDot);
             moveToSlide(currentSlide, slides[targetIndex]);
             updateDots(currentDot, targetDot);
-            hideShowArrows(targetIndex);
         });
 
-        // Recalcula la posición al cambiar el tamaño de pantalla
         window.addEventListener('resize', () => {
             const currentIndex = slides.indexOf(track.querySelector('.current-slide'));
             track.style.transform = `translateX(-${currentIndex * getSlideWidth()}px)`;
+        });
+
+        // Autoplay: avanza cada 5 segundos, vuelve al inicio al llegar al final
+        const autoAdvance = () => {
+            const currentSlide = track.querySelector('.current-slide');
+            const currentDot   = dotsNav.querySelector('.current-indicator');
+            const currentIndex = slides.indexOf(currentSlide);
+            const targetIndex  = currentIndex === slides.length - 1 ? 0 : currentIndex + 1;
+            moveToSlide(currentSlide, slides[targetIndex]);
+            updateDots(currentDot, dots[targetIndex]);
+        };
+
+        let autoplayInterval = setInterval(autoAdvance, 5000);
+
+        // Reinicia el temporizador si el usuario hace clic en un dot
+        dotsNav.addEventListener('click', () => {
+            clearInterval(autoplayInterval);
+            autoplayInterval = setInterval(autoAdvance, 5000);
         });
     }
 
