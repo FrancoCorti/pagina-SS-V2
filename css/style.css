@@ -806,7 +806,8 @@ section {
 .about-content {
     max-width: 800px;
     margin: 0 auto;
-    text-align: left;
+    text-align: justify;
+    text-align-last: center;
 }
 
 .about-content {
@@ -865,8 +866,14 @@ section {
 }
 
 .steps-carousel {
-    max-width: 660px;
+    max-width: 100%;
     margin: 0 auto;
+}
+
+.steps-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
 }
 
 /* Barra de progreso superior */
@@ -888,7 +895,7 @@ section {
 /* Contenedor del track */
 .steps-track-container {
     position: relative;
-    min-height: 230px;
+    min-height: 290px;
 }
 
 .steps-track {
@@ -1022,9 +1029,10 @@ section {
 }
 
 .steps-indicator {
-    width: 40px;
+    width: auto;
+    padding: 0 1rem;
     height: 40px;
-    border-radius: 50%;
+    border-radius: 20px;
     border: 2px solid #dcdcdc;
     background: transparent;
     cursor: pointer;
@@ -1051,14 +1059,22 @@ section {
 }
 
 @media (max-width: 768px) {
+    .steps-track-container {
+        min-height: 0;
+    }
+    .steps-group {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
     .step-card-solo {
-        padding: 2.5rem 1.75rem;
+        padding: 2rem 1.5rem;
     }
     .step-number {
         font-size: var(--fs-sm);
     }
     .steps-indicator {
-        width: 34px;
+        width: auto;
+        padding: 0 0.75rem;
         height: 34px;
         font-size: var(--fs-xs);
     }
@@ -1067,10 +1083,6 @@ section {
 @media (max-width: 480px) {
     .steps-controls {
         gap: 0.75rem;
-    }
-    .steps-indicator {
-        width: 30px;
-        height: 30px;
     }
 }
 
@@ -1280,6 +1292,46 @@ section {
 .testimonials-section {
     background-color: var(--color-blanco);
     padding: 80px 0;
+}
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+    margin-bottom: 4rem;
+}
+
+.kpi-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.kpi-number {
+    font-family: var(--font-titulo);
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    color: var(--color-verde);
+    line-height: 1;
+}
+
+.kpi-label {
+    font-size: var(--fs-sm);
+    color: var(--color-gris-texto);
+    font-weight: var(--fw-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-bottom: 2.5rem;
+    }
 }
 
 .carousel-wrapper {
@@ -1514,6 +1566,7 @@ section {
 }
 
 .contact-card {
+    position: relative;
     background-color: rgba(255, 255, 255, 0.97);
     padding: 2.75rem 2rem;
     border-radius: 16px;
@@ -1562,7 +1615,7 @@ section {
     margin-bottom: 0.75rem;
 }
 
-.contact-card a {
+.contact-card-link {
     color: var(--color-texto);
     font-size: var(--fs-base);
     font-weight: var(--fw-medium);
@@ -1570,8 +1623,21 @@ section {
     transition: color var(--transition-speed) ease;
 }
 
-.contact-card a:hover {
+.contact-card:hover .contact-card-link {
     color: #4a7459;
+}
+
+.contact-card-text {
+    color: var(--color-texto);
+    font-size: var(--fs-base);
+    font-weight: var(--fw-medium);
+}
+
+.contact-card-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
 }
 
 .contact-cta {
@@ -1744,4 +1810,34 @@ section {
 .social-links svg {
     width: 18px;
     height: 18px;
+}
+
+/* =========================================
+   BOTÓN FLOTANTE WHATSAPP
+   ========================================= */
+.whatsapp-fab {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 999;
+    width: 58px;
+    height: 58px;
+    background-color: #25D366;
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.45);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.whatsapp-fab svg {
+    width: 30px;
+    height: 30px;
+}
+
+.whatsapp-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 24px rgba(37, 211, 102, 0.6);
 }

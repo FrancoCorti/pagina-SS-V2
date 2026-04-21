@@ -158,4 +158,46 @@ document.addEventListener('DOMContentLoaded', () => {
             dot.addEventListener('click', () => goTo(i));
         });
     }
+
+    // ==========================================
+    // ANIMACIÓN CONTEO KPIs
+    // ==========================================
+    const kpiGrid = document.querySelector('.kpi-grid');
+
+    if (kpiGrid) {
+        const countUp = (el) => {
+            const target = +el.dataset.target;
+            const prefix = el.dataset.prefix || '';
+            const suffix = el.dataset.suffix || '';
+            const duration = 1800;
+            const step = 16;
+            const increment = target / (duration / step);
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                el.textContent = prefix + Math.floor(current) + suffix;
+            }, step);
+        };
+
+        let animated = false;
+
+        const kpiObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !animated) {
+                    animated = true;
+                    kpiGrid.querySelectorAll('.kpi-number[data-target]').forEach((el, i) => {
+                        setTimeout(() => countUp(el), i * 150);
+                    });
+                    kpiObserver.disconnect();
+                }
+            });
+        }, { threshold: 0.4, rootMargin: '0px 0px -80px 0px' });
+
+        kpiObserver.observe(kpiGrid);
+    }
 });
